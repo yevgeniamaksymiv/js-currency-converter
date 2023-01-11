@@ -11,6 +11,10 @@
       crossorigin="anonymous"
     />
     <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
     <title>Currency Converter</title>
   </head>
   <body>
@@ -23,33 +27,36 @@
           <span id="USD-rate" class="content-header pe-3"></span>
           <span id="EUR-rate" class="content-header"></span>
         </div>
-        <div class="card mt-3">
+        <div class="card mt-3 p-4">
           <div class="card-body">
-            <div class="input-group mb-3">
-              <input
-                type="text"
-                class="form-control"
-                aria-label="Text input with dropdown button"
-              />
-              <button
-                class="btn btn-outline-secondary dropdown-toggle"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Select
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>USD</li>
-                <li>EUR</li>
-                <li>UAH</li>
-              </ul>
+            <div class="select-section">
+              <select id="select-1">
+                <option selected>Select</option>
+              </select>
+              <span id="icon-arrow" class="material-icons"> east </span>
+              <select id="select-2">
+                <option selected>Select</option>
+              </select>
             </div>
+            <input
+              id="input"
+              type="number"
+              class="form-control mt-3 p-2"
+              placeholder="Amount"
+            />
+            <button
+              type="button"
+              class="btn btn-dark ps-3 pe-3 mt-3"
+              id="btn-convert"
+            >
+              Convert
+            </button>
+            <ul id="result-list"></ul>
           </div>
         </div>
       </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/script.js"></script>
   </body>
 </html>
