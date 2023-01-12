@@ -18,7 +18,7 @@ body {
 }
 
 .card {
-  height: 70vh;
+  min-height: 70vh;
   background-color: #121212;
   }
 
@@ -44,8 +44,9 @@ body {
   
   #input {
     background-color: rgba(18, 18, 18, 0.8);
-    border: 1px solid #c6c9d2;
+    border: .5px solid #c6c9d2;
     color:#c6c9d2;
+    border-radius: 5px;
   }
   
   ul {
@@ -65,5 +66,17 @@ body {
     position: relative;
     top: 6px;
     margin-left: 10px;
-    color: red;
+    color: #dc3545;
+  }
+
+  .btn-secondary {
+    color: #121212;
+  }
+
+  .btn-danger {
+    color: #121212;
+  }
+
+  .btn:focus, .form-control:focus {
+    box-shadow: none;
   }
