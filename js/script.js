@@ -63,20 +63,40 @@ select2.onchange = () => {
   currencyTo = select2.options[select2.selectedIndex].text;
 };
 
+const addItemToList = (amount, currency1, currency2, result) => {
+  const id = Math.random().toString(16).slice(2);
+  const liContent = `${amount} ${currency1} = ${result} ${currency2}`;
+  localStorage.setItem(`${id}`, `${liContent}`);
+  // console.log(Object.entries(localStorage))
+  // Object.entries(localStorage).forEach(el => {
+  //   const li = document.createElement('li');
+  //   li.id = +el[0];
+  //   li.innerHTML = el[1];
+  //   const icon = document.createElement('span');
+  //   icon.id = li.id;
+  //   icon.className = 'material-icons';
+  //   icon.classList.add('icon-delete');
+  //   icon.appendChild(document.createTextNode('cancel'));
+  //   li.appendChild(icon);
+  //   resultList.appendChild(li);
+  // })
+  const li = document.createElement('li');
+  li.id = id;
+  li.innerHTML = localStorage.getItem(`${id}`);
+  const icon = document.createElement('span');
+  icon.id = li.id;
+  icon.className = 'material-icons';
+  icon.classList.add('icon-delete');
+  icon.appendChild(document.createTextNode('cancel'));
+  li.appendChild(icon);
+  resultList.appendChild(li);
+};
+
 btnConvert.onclick = () => {
   if (rateFrom && rateTo) {
-    const result = ((rateTo / rateFrom) * input.value).toFixed(4);
-    const li = document.createElement('li');
-    li.innerHTML = `${input.value} ${currencyFrom} = ${result} ${currencyTo}`;
-    const icon = document.createElement('span');
-    icon.className = 'material-icons';
-    icon.style.color = 'red';
-    icon.style.position = 'relative';
-    icon.style.top = '6px';
-    icon.style.marginLeft = '10px';
-    icon.appendChild(document.createTextNode('cancel'));
-    li.appendChild(icon);
-    resultList.appendChild(li);
+    const convertResult = ((rateTo / rateFrom) * input.value).toFixed(4);
+
+    addItemToList(input.value, currencyFrom, currencyTo, convertResult);
     input.value = '';
   }
 };

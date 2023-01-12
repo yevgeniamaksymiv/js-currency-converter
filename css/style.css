@@ -10,7 +10,7 @@ body {
   font-family: 'Montserrat', sans-serif;
   background-color: #121212;
   color: rgba(255, 255, 255, .6);
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .content-header {
@@ -59,4 +59,11 @@ body {
 
   ul li {
     margin-right: 20vw;
+  }
+
+  .icon-delete {
+    position: relative;
+    top: 6px;
+    margin-left: 10px;
+    color: red;
   }
