@@ -14,27 +14,20 @@ const errorMessInput = document.getElementById('error-input');
 const date = new Date().toLocaleDateString();
 currentDate.innerHTML = `Current rate for ${date}:`;
 
-const API_URL = 'https://api.exchangerate.host/latest';
-const API_URL_BASE =
-  'https://api.exchangerate.host/latest?base=UAH&symbols=USD,EUR';
-
 const axiosInstance = axios.create({
-  adapter: ['xhr', 'http', 'https'],
   baseURL: 'https://api.exchangerate.host',
-  params: {
-    base: 'UAH',
-    symbols: ['USD', 'EUR'],
-  },
   timeout: 3000,
   headers: {
     'Content-Type': 'application/json',
   },
-});  
+});
 
 const getDailyRate = async () => {
   try {
-    const response = await axiosInstance.get('/latest');
-    console.log(response.data)
+    const response = await axiosInstance.get('/latest', {
+      base: 'UAH',
+      symbols: 'USD, EUR',
+    });
     const rates = Object.values(response.data.rates).map((rate) =>
       (1 / Number(rate)).toFixed(2)
     );
@@ -45,11 +38,9 @@ const getDailyRate = async () => {
   }
 };
 
-window.onload = () => getDailyRate();
-
-const getAllCurrencies = async (url, parentTag) => {
+const getAllCurrencies = async (parentTag) => {
   try {
-    const response = await axios.get(url);
+    const response = await axiosInstance.get('/latest');
     const rates = Object.entries(response.data.rates);
 
     rates.forEach((rate) => {
@@ -63,8 +54,11 @@ const getAllCurrencies = async (url, parentTag) => {
   }
 };
 
-getAllCurrencies(API_URL, select1);
-getAllCurrencies(API_URL, select2);
+window.onload = () => {
+  getDailyRate();
+  getAllCurrencies(select1);
+  getAllCurrencies(select2);
+};
 
 let rateFrom;
 let rateTo;
@@ -117,7 +111,8 @@ const addItemToList = (amount, currency1, currency2, result) => {
 
 btnConvert.onclick = () => {
   if (input.value < 0) {
-    errorMessInput.innerHTML = 'That is not a valid input, enter a number greater than zero';
+    errorMessInput.innerHTML =
+      'That is not a valid input, enter a number greater than zero';
     setTimeout(() => (errorMessInput.innerHTML = ''), 4000);
     return;
   }
@@ -134,7 +129,7 @@ const btnClearHistory = document.createElement('button');
 btnHistory.onclick = () => {
   if (Object.keys(localStorage).length === 0) {
     errorMessHistory.innerHTML = 'The history of currency conversion is empty';
-    setTimeout(() => errorMessHistory.innerHTML = '', 4000);
+    setTimeout(() => (errorMessHistory.innerHTML = ''), 4000);
     return;
   }
 
