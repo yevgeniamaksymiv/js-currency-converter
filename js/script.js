@@ -25,8 +25,7 @@ date.onchange = () => {
     getHistoricalRate(date.value, select1);
     getHistoricalRate(date.value, select2);
   }
-}
-  
+};
 
 const axiosInstance = axios.create({
   baseURL: 'https://api.exchangerate.host',
@@ -45,7 +44,7 @@ const getDailyRate = async () => {
       },
     });
     const rates = Object.values(response.data.rates).map((rate) =>
-    (1 / Number(rate)).toFixed(2)
+      (1 / Number(rate)).toFixed(2)
     );
     eur.innerHTML = `1 EUR = ${rates[0]} UAH`;
     usd.innerHTML = `1 USD = ${rates[1]} UAH`;
@@ -65,12 +64,10 @@ const getHistoricalRate = async (time, parentTag) => {
       option.value = rate[1];
       parentTag.appendChild(option);
     });
-    
   } catch (error) {
     console.error(error);
-    
   }
-}
+};
 
 const getAllCurrencies = async (parentTag) => {
   try {
