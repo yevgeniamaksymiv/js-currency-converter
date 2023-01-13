@@ -4,6 +4,7 @@ const currentDate = document.getElementById('current-date');
 const select1 = document.getElementById('select-1');
 const select2 = document.getElementById('select-2');
 const input = document.getElementById('input');
+const date = document.getElementById('date');
 const btnConvert = document.getElementById('btn-convert');
 const resultList = document.getElementById('result-list');
 const btnHistory = document.getElementById('btn-history');
@@ -11,8 +12,21 @@ const clearHistory = document.getElementById('clear-history');
 const errorMessHistory = document.getElementById('error-history');
 const errorMessInput = document.getElementById('error-input');
 
-const date = new Date().toLocaleDateString();
-currentDate.innerHTML = `Current rate for ${date}:`;
+const dateCurr = new Date().toLocaleDateString();
+currentDate.innerHTML = `Current rate for ${dateCurr}:`;
+date.value = dateCurr.split('.').reverse().join('-');
+date.max = date.value;
+
+date.onchange = () => {
+  if (dateCurr.split('.').reverse().join('-') !== date.value) {
+    select1.length = 1;
+    select2.length = 1;
+
+    getHistoricalRate(date.value, select1);
+    getHistoricalRate(date.value, select2);
+  }
+}
+  
 
 const axiosInstance = axios.create({
   baseURL: 'https://api.exchangerate.host',
@@ -25,11 +39,13 @@ const axiosInstance = axios.create({
 const getDailyRate = async () => {
   try {
     const response = await axiosInstance.get('/latest', {
-      base: 'UAH',
-      symbols: 'USD, EUR',
+      params: {
+        base: 'UAH',
+        symbols: 'USD,EUR',
+      },
     });
     const rates = Object.values(response.data.rates).map((rate) =>
-      (1 / Number(rate)).toFixed(2)
+    (1 / Number(rate)).toFixed(2)
     );
     eur.innerHTML = `1 EUR = ${rates[0]} UAH`;
     usd.innerHTML = `1 USD = ${rates[1]} UAH`;
@@ -37,6 +53,24 @@ const getDailyRate = async () => {
     console.error(error);
   }
 };
+
+const getHistoricalRate = async (time, parentTag) => {
+  try {
+    const response = await axiosInstance.get(`/${time}`);
+    const rates = Object.entries(response.data.rates);
+
+    rates.forEach((rate) => {
+      const option = document.createElement('option');
+      option.appendChild(document.createTextNode(`${rate[0]}`));
+      option.value = rate[1];
+      parentTag.appendChild(option);
+    });
+    
+  } catch (error) {
+    console.error(error);
+    
+  }
+}
 
 const getAllCurrencies = async (parentTag) => {
   try {

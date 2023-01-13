@@ -42,7 +42,7 @@ body {
     color:#c6c9d2;
   }
   
-  #input {
+  #input, #date {
     background-color: rgba(18, 18, 18, 0.8);
     border: .5px solid #c6c9d2;
     color:#c6c9d2;
@@ -67,6 +67,10 @@ body {
     top: 6px;
     margin-left: 10px;
     color: #dc3545;
+  }
+
+  .icon-delete:hover {
+    opacity: .5;
   }
 
   .btn-secondary {
