@@ -7,7 +7,9 @@ const input = document.getElementById('input');
 const btnConvert = document.getElementById('btn-convert');
 const resultList = document.getElementById('result-list');
 const btnHistory = document.getElementById('btn-history');
-const btnClearHistory = document.getElementById('btn-clear-history');
+const clearHistory = document.getElementById('clear-history');
+const errorMessHistory = document.getElementById('error-history');
+const errorMessInput = document.getElementById('error-input');
 
 const date = new Date().toLocaleDateString();
 currentDate.innerHTML = `Current rate for ${date}:`;
@@ -16,9 +18,23 @@ const API_URL = 'https://api.exchangerate.host/latest';
 const API_URL_BASE =
   'https://api.exchangerate.host/latest?base=UAH&symbols=USD,EUR';
 
-const getDailyRate = async (url) => {
+const axiosInstance = axios.create({
+  adapter: ['xhr', 'http', 'https'],
+  baseURL: 'https://api.exchangerate.host',
+  params: {
+    base: 'UAH',
+    symbols: ['USD', 'EUR'],
+  },
+  timeout: 3000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});  
+
+const getDailyRate = async () => {
   try {
-    const response = await axios.get(url);
+    const response = await axiosInstance.get('/latest');
+    console.log(response.data)
     const rates = Object.values(response.data.rates).map((rate) =>
       (1 / Number(rate)).toFixed(2)
     );
@@ -29,7 +45,7 @@ const getDailyRate = async (url) => {
   }
 };
 
-getDailyRate(API_URL_BASE);
+window.onload = () => getDailyRate();
 
 const getAllCurrencies = async (url, parentTag) => {
   try {
@@ -85,11 +101,14 @@ const createListItem = (id) => {
 
   btnDeleteItem.onclick = () => {
     li.innerHTML = '';
-  }
-}
+    localStorage.removeItem(`${id}`);
+    if (Object.keys(localStorage).length === 0) {
+      btnClearHistory.remove();
+    }
+  };
+};
 
 const addItemToList = (amount, currency1, currency2, result) => {
-
   const uniqueId = Math.random().toString(16).slice(2);
   const liContent = `${amount} ${currency1} = ${result} ${currency2}`;
   localStorage.setItem(`${uniqueId}`, `${liContent}`);
@@ -97,6 +116,11 @@ const addItemToList = (amount, currency1, currency2, result) => {
 };
 
 btnConvert.onclick = () => {
+  if (input.value < 0) {
+    errorMessInput.innerHTML = 'That is not a valid input, enter a number greater than zero';
+    setTimeout(() => (errorMessInput.innerHTML = ''), 4000);
+    return;
+  }
   if (rateFrom && rateTo) {
     const convertResult = ((rateTo / rateFrom) * input.value).toFixed(4);
 
@@ -105,15 +129,24 @@ btnConvert.onclick = () => {
   }
 };
 
+const btnClearHistory = document.createElement('button');
+
 btnHistory.onclick = () => {
+  if (Object.keys(localStorage).length === 0) {
+    errorMessHistory.innerHTML = 'The history of currency conversion is empty';
+    setTimeout(() => errorMessHistory.innerHTML = '', 4000);
+    return;
+  }
+
   resultList.innerHTML = '';
   Object.keys(localStorage).forEach((id) => createListItem(id));
-  btnClearHistory.innerHTML = 'Clear All';
+  clearHistory.appendChild(btnClearHistory);
+  btnClearHistory.innerHTML = 'Clear history';
   btnClearHistory.className = 'btn btn-danger';
-}
+};
 
 btnClearHistory.onclick = () => {
   localStorage.clear();
   resultList.innerHTML = '';
-  // btnClearHistory.remove();
-}
+  btnClearHistory.remove();
+};

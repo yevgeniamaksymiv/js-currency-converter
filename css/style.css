@@ -80,3 +80,8 @@ body {
   .btn:focus, .form-control:focus {
     box-shadow: none;
   }
+
+  #error-history, #error-input {
+    display: block;
+    color: #dc3545;
+  }
