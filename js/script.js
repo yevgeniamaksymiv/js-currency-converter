@@ -8,7 +8,7 @@ const date = document.getElementById('date');
 const btnConvert = document.getElementById('btn-convert');
 const resultList = document.getElementById('result-list');
 const btnHistory = document.getElementById('btn-history');
-const clearHistory = document.getElementById('clear-history');
+const btnsHistory = document.getElementById('btns-history');
 const errorMessHistory = document.getElementById('error-history');
 const errorMessInput = document.getElementById('error-input');
 
@@ -156,6 +156,13 @@ btnConvert.onclick = () => {
 };
 
 const btnClearHistory = document.createElement('button');
+const btnCloseHistory = document.createElement('button');
+
+const appendElem = (parent, child, text, name) => {
+  parent.appendChild(child);
+  child.innerHTML = text;
+  child.className = name;
+};
 
 btnHistory.onclick = () => {
   if (Object.keys(localStorage).length === 0) {
@@ -166,13 +173,26 @@ btnHistory.onclick = () => {
 
   resultList.innerHTML = '';
   Object.keys(localStorage).forEach((id) => createListItem(id));
-  clearHistory.appendChild(btnClearHistory);
-  btnClearHistory.innerHTML = 'Clear history';
-  btnClearHistory.className = 'btn btn-danger';
+  appendElem(
+    btnsHistory,
+    btnCloseHistory,
+    'Close',
+    'btn btn-outline-primary me-4'
+  );
+  appendElem(btnsHistory, btnClearHistory, 'Clear', 'btn btn-outline-danger');
 };
+
+const clearHistorySection = () => {
+  resultList.innerHTML = '';
+  btnClearHistory.remove();
+  btnCloseHistory.remove();
+}
 
 btnClearHistory.onclick = () => {
   localStorage.clear();
-  resultList.innerHTML = '';
-  btnClearHistory.remove();
+  clearHistorySection();
+};
+
+btnCloseHistory.onclick = () => {
+  clearHistorySection();
 };
