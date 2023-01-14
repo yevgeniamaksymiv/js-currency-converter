@@ -78,7 +78,7 @@ const getHistoricalRate = async (time, parentTag) => {
 
     rates.forEach((rate) => {
       const option = document.createElement('option');
-      option.appendChild(document.createTextNode(`${rate[0]}`));
+      option.appendChild(document.createTextNode(rate[0]));
       option.value = rate[1];
       parentTag.appendChild(option);
     });
@@ -94,7 +94,7 @@ const getAllCurrencies = async (parentTag) => {
 
     rates.forEach((rate) => {
       const option = document.createElement('option');
-      option.appendChild(document.createTextNode(`${rate[0]}`));
+      option.appendChild(document.createTextNode(rate[0]));
       option.value = rate[1];
       parentTag.appendChild(option);
     });
