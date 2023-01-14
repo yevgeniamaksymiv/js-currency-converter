@@ -12,6 +12,24 @@ const btnsHistory = document.getElementById('btns-history');
 const errorMessHistory = document.getElementById('error-history');
 const errorMessInput = document.getElementById('error-input');
 
+const themeIcon = document.getElementById('theme-icon');
+const svg = document.querySelector('object');
+svg.data = '/assets/dark-mode.svg';
+const theme = window.localStorage.getItem('theme');
+
+if (theme === 'light') {
+  document.body.classList.add('light');
+  svg.data = '/assets/light-mode.svg';
+}
+
+themeIcon.onclick = () => {
+  document.body.classList.toggle('dark');
+  if (theme === 'light') {
+    localStorage.setItem('theme', 'dark');
+  } else localStorage.setItem('theme', 'light');
+  window.location.reload();
+};
+
 const dateCurr = new Date().toLocaleDateString();
 currentDate.innerHTML = `Current rate for ${dateCurr}:`;
 date.value = dateCurr.split('.').reverse().join('-');
@@ -109,11 +127,10 @@ select2.onchange = () => {
 const createListItem = (id) => {
   const li = document.createElement('li');
   li.id = id;
-  li.innerHTML = localStorage.getItem(`${id}`);
+  li.innerHTML = localStorage.getItem(id);
 
   const btnDeleteItem = document.createElement('button');
-  btnDeleteItem.style.backgroundColor = '#121212';
-  btnDeleteItem.style.border = 'none';
+  btnDeleteItem.className = 'btn-delete-item';
   btnDeleteItem.id = li.id;
 
   const icon = document.createElement('span');
@@ -172,7 +189,13 @@ btnHistory.onclick = () => {
   }
 
   resultList.innerHTML = '';
-  Object.keys(localStorage).forEach((id) => createListItem(id));
+  Object.keys(localStorage).forEach((key) => {
+    if (key === 'theme') {
+      return;
+    } else {
+      createListItem(key);
+    }
+  });
   appendElem(
     btnsHistory,
     btnCloseHistory,
@@ -186,10 +209,12 @@ const clearHistorySection = () => {
   resultList.innerHTML = '';
   btnClearHistory.remove();
   btnCloseHistory.remove();
-}
+};
 
 btnClearHistory.onclick = () => {
-  localStorage.clear();
+  Object.keys(localStorage).forEach((key) =>
+    key !== 'theme' ? localStorage.removeItem(key) : key
+  );
   clearHistorySection();
 };
 
