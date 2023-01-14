@@ -18,11 +18,11 @@ body {
 }
 
 .light {
-  --text-light: #0D4AB3;
+  --text-light: #212529;
   --text-blue: #0d6efd;
   --text-red: #dc3545;
   --bg-dark: #f5f5f5;
-  --bg-grey: #0d6efd6b;
+  --bg-grey: #9aa8bde3;
 }
 
 .content {
@@ -68,66 +68,65 @@ select {
   color: var(--text-light);
   border-radius: 5px;
 }
-  
-  ul {
-    list-style: none;
-    color: var(--text-blue);
-    padding: 20px;
-    margin: 0;
-    font-size: 14px;
-    text-align: end;
-  }
 
-  ul li {
-    margin-right: 20vw;
-  }
+ul {
+  list-style: none;
+  color: var(--text-blue);
+  padding: 20px;
+  font-size: 14px;
+  text-align: end;
+}
 
-  .btn-delete-item {
-    background-color: var(--bg-dark);
-    border: none;
-  }
+ul li {
+  margin-right: 35%;
+}
 
-  .icon-delete {
-    position: relative;
-    top: 6px;
-    margin-left: 10px;
-    color: var(--text-red);
-  }
+.btn-delete-item {
+  background-color: var(--bg-dark);
+  border: none;
+}
 
-  .icon-delete:hover {
-    opacity: .5;
-  }
+.icon-delete {
+  position: relative;
+  top: 6px;
+  margin-left: 10px;
+  color: var(--text-red);
+}
 
-  .btn-secondary {
-    color: var(--bg-dark);
-  }
+.icon-delete:hover {
+  opacity: .5;
+}
 
-  .btn-danger {
-    color: var(--bg-dark);
-  }
+.btn-secondary {
+  color: var(--bg-dark);
+}
 
-  .btn:focus, .form-control:focus {
-    box-shadow: none;
-  }
+.btn-danger {
+  color: var(--bg-dark);
+}
 
-  #error-history, #error-input {
-    display: block;
-    color: var(--text-red);
-  }
+.btn:focus, .form-control:focus {
+  box-shadow: none;
+}
 
-  #date {
-    color-scheme: dark;
-  }
+#error-history, #error-input {
+  display: block;
+  color: var(--text-red);
+}
 
-  #theme-icon {
-    margin-left: 20px;
-    cursor: pointer;
-  }
+#date {
+  color-scheme: dark;
+}
 
-    #theme-icon:hover {
-      opacity: .5;
-    }
+#theme-icon {
+  margin-left: 20px;
+  cursor: pointer;
+}
 
-  object {
-    pointer-events: none;
-  }
+#theme-icon:hover {
+  opacity: .5;
+}
+
+object {
+  pointer-events: none;
+}

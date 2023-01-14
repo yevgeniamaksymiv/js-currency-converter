@@ -12,6 +12,8 @@ const btnsHistory = document.getElementById('btns-history');
 const errorMessHistory = document.getElementById('error-history');
 const errorMessInput = document.getElementById('error-input');
 
+// change dark/light mode
+
 const themeIcon = document.getElementById('theme-icon');
 themeIcon.src = '/assets/dark-mode.svg';
 const theme = window.localStorage.getItem('theme');
@@ -29,10 +31,14 @@ themeIcon.onclick = () => {
   window.location.reload();
 };
 
+// display current date in the header
+
 const dateCurr = new Date().toLocaleDateString();
 currentDate.innerHTML = `Current rate for ${dateCurr}:`;
 date.value = dateCurr.split('.').reverse().join('-');
 date.max = date.value;
+
+// if date was changed get new data according search date
 
 date.onchange = () => {
   if (dateCurr.split('.').reverse().join('-') !== date.value) {
@@ -52,6 +58,8 @@ const axiosInstance = axios.create({
   },
 });
 
+// fetch today's data from api & display daily rate in the header
+
 const getDailyRate = async () => {
   try {
     const response = await axiosInstance.get('/latest', {
@@ -70,6 +78,8 @@ const getDailyRate = async () => {
   }
 };
 
+// fetch data from api according search date & append currencies
+
 const getHistoricalRate = async (time, parentTag) => {
   try {
     const response = await axiosInstance.get(`/${time}`);
@@ -85,6 +95,8 @@ const getHistoricalRate = async (time, parentTag) => {
     console.error(error);
   }
 };
+
+// fetch last data from api & append currencies
 
 const getAllCurrencies = async (parentTag) => {
   try {
@@ -107,6 +119,9 @@ window.onload = () => {
   getAllCurrencies(select1);
   getAllCurrencies(select2);
 };
+
+// select currencies, count & display in list result exchange currencies
+// with delete button for each of items
 
 let rateFrom;
 let rateTo;
@@ -170,6 +185,8 @@ btnConvert.onclick = () => {
     input.value = '';
   }
 };
+
+// show list with history of currency conversions with two buttons (clear & close)
 
 const btnClearHistory = document.createElement('button');
 const btnCloseHistory = document.createElement('button');
