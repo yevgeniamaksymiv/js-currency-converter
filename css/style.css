@@ -120,11 +120,13 @@ select {
   }
 
   #theme-icon {
-    display: inline;
-    position: relative;
-    top: 6px;
     margin-left: 20px;
+    cursor: pointer;
   }
+
+    #theme-icon:hover {
+      opacity: .5;
+    }
 
   object {
     pointer-events: none;

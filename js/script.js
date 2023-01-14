@@ -13,13 +13,12 @@ const errorMessHistory = document.getElementById('error-history');
 const errorMessInput = document.getElementById('error-input');
 
 const themeIcon = document.getElementById('theme-icon');
-const svg = document.querySelector('object');
-svg.data = '/assets/dark-mode.svg';
+themeIcon.src = '/assets/dark-mode.svg';
 const theme = window.localStorage.getItem('theme');
 
 if (theme === 'light') {
   document.body.classList.add('light');
-  svg.data = '/assets/light-mode.svg';
+  themeIcon.src = '/assets/light-mode.svg';
 }
 
 themeIcon.onclick = () => {
