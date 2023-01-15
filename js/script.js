@@ -45,8 +45,8 @@ date.onchange = () => {
     select1.length = 1;
     select2.length = 1;
 
-    getHistoricalRate(date.value, select1);
-    getHistoricalRate(date.value, select2);
+    getAllCurrencies(select1, date.value);
+    getAllCurrencies(select2, date.value);
   }
 };
 
@@ -78,39 +78,36 @@ const getDailyRate = async () => {
   }
 };
 
-// fetch data from api according search date & append currencies
+// fetch data from api & append currencies in select
 
-const getHistoricalRate = async (time, parentTag) => {
-  try {
-    const response = await axiosInstance.get(`/${time}`);
-    const rates = Object.entries(response.data.rates);
-
-    rates.forEach((rate) => {
-      const option = document.createElement('option');
-      option.appendChild(document.createTextNode(rate[0]));
-      option.value = rate[1];
-      parentTag.appendChild(option);
-    });
-  } catch (error) {
-    console.error(error);
-  }
+const appendOptionsToSelectTag = (arr2d, tag) => {
+  return arr2d.forEach((arr) => {
+    const option = document.createElement('option');
+    option.appendChild(document.createTextNode(arr[0]));
+    option.value = arr[1];
+    tag.appendChild(option);
+  });
 };
 
-// fetch last data from api & append currencies
+const getAllCurrencies = async (parentTag, historyDate = null) => {
+  if (historyDate !== null) {
+    try {
+      const response = await axiosInstance.get(`/${historyDate}`);
+      const rates = Object.entries(response.data.rates);
 
-const getAllCurrencies = async (parentTag) => {
-  try {
-    const response = await axiosInstance.get('/latest');
-    const rates = Object.entries(response.data.rates);
+      appendOptionsToSelectTag(rates, parentTag);
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    try {
+      const response = await axiosInstance.get('/latest');
+      const rates = Object.entries(response.data.rates);
 
-    rates.forEach((rate) => {
-      const option = document.createElement('option');
-      option.appendChild(document.createTextNode(rate[0]));
-      option.value = rate[1];
-      parentTag.appendChild(option);
-    });
-  } catch (error) {
-    console.error(error);
+      appendOptionsToSelectTag(rates, parentTag);
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 
