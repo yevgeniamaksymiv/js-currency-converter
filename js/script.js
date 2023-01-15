@@ -1,6 +1,6 @@
 const usd = document.getElementById('USD-rate');
 const eur = document.getElementById('EUR-rate');
-const currentDate = document.getElementById('current-date');
+const dateInfo = document.getElementById('current-date');
 const select1 = document.getElementById('select-1');
 const select2 = document.getElementById('select-2');
 const input = document.getElementById('input');
@@ -34,7 +34,7 @@ themeIcon.onclick = () => {
 // display current date in the header
 
 const dateCurr = new Date().toLocaleDateString();
-currentDate.innerHTML = `Current rate for ${dateCurr}:`;
+dateInfo.innerHTML = `Current rate for ${dateCurr}:`;
 date.value = dateCurr.split('.').reverse().join('-');
 date.max = date.value;
 
@@ -163,7 +163,7 @@ const createListItem = (id) => {
 
 const addItemToList = (amount, currency1, currency2, result) => {
   const uniqueId = Math.random().toString(16).slice(2);
-  const liContent = `${amount} ${currency1} = ${result} ${currency2}`;
+  const liContent = `<small>${date.value}:</small> ${amount} ${currency1} = ${result} ${currency2}`;
   localStorage.setItem(`${uniqueId}`, `${liContent}`);
   createListItem(uniqueId);
 };
@@ -195,7 +195,7 @@ const appendElem = (parent, child, text, name) => {
 };
 
 btnHistory.onclick = () => {
-  if (Object.keys(localStorage).length === 0) {
+  if (Object.keys(localStorage).filter((key) => key !== 'theme').length === 0) {
     errorMessHistory.innerHTML = 'The history of currency conversion is empty';
     setTimeout(() => (errorMessHistory.innerHTML = ''), 4000);
     return;

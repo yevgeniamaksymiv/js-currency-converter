@@ -127,6 +127,6 @@ ul li {
   opacity: .5;
 }
 
-object {
-  pointer-events: none;
+small {
+  color: var(--text-light);
 }
