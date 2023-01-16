@@ -1,5 +1,11 @@
 const usd = document.getElementById('USD-rate');
 const eur = document.getElementById('EUR-rate');
+const gbp = document.getElementById('GBP-rate');
+const cny = document.getElementById('CNY-rate');
+const aud = document.getElementById('AUD-rate');
+const btc = document.getElementById('BTC-rate');
+const headerRate = document.getElementById('header-rate');
+const selectHeader = document.getElementById('select-header');
 const dateInfo = document.getElementById('current-date');
 const select1 = document.getElementById('select-1');
 const select2 = document.getElementById('select-2');
@@ -11,6 +17,7 @@ const btnHistory = document.getElementById('btn-history');
 const btnsHistory = document.getElementById('btns-history');
 const errorMessHistory = document.getElementById('error-history');
 const errorMessInput = document.getElementById('error-input');
+const reverseCurr = document.getElementById('reverse-currency');
 
 // change dark/light mode
 
@@ -58,6 +65,43 @@ const axiosInstance = axios.create({
   },
 });
 
+// fetch today's data from api base BTC to USD
+const getBTCtoUSD = async () => {
+  try {
+    const response = await axiosInstance.get('/latest', {
+      params: {
+        base: 'BTC',
+        symbols: 'USD',
+        source: 'crypto'
+      },
+    });
+    const rates = Object.entries(response.data.rates);
+    btc.innerHTML = ` 1 BTC = ${Number(rates[0][1]).toFixed(2)} USD`;
+    btc.style.color = '#0d6efd';
+    
+    
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// fetch today's data from api for base USD in header select
+
+const getUSDRate = async (parentTag) => {
+  try {
+    const response = await axiosInstance.get('/latest', {
+      params: {
+        base: 'USD',
+        symbols: 'UAH,EUR,GBP',
+      },
+    });
+    const rates = Object.entries(response.data.rates);
+    appendOptionsToSelectTag(rates, parentTag);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // fetch today's data from api & display daily rate in the header
 
 const getDailyRate = async () => {
@@ -65,14 +109,17 @@ const getDailyRate = async () => {
     const response = await axiosInstance.get('/latest', {
       params: {
         base: 'UAH',
-        symbols: 'USD,EUR',
+        symbols: 'USD,EUR,GBP,CNY,AUD',
       },
     });
     const rates = Object.values(response.data.rates).map((rate) =>
       (1 / Number(rate)).toFixed(2)
     );
-    eur.innerHTML = `1 EUR = ${rates[0]} UAH`;
-    usd.innerHTML = `1 USD = ${rates[1]} UAH`;
+    eur.innerHTML = `1 EUR = ${rates[2]} UAH`;
+    usd.innerHTML = `1 USD = ${rates[4]} UAH`;
+    gbp.innerHTML = `1 GBP = ${rates[3]} UAH`;
+    cny.innerHTML = `1 CNY = ${rates[1]} UAH`;
+    aud.innerHTML = `1 AUD = ${rates[0]} UAH`;
   } catch (error) {
     console.error(error);
   }
@@ -112,9 +159,19 @@ const getAllCurrencies = async (parentTag, historyDate = null) => {
 };
 
 window.onload = () => {
+  getBTCtoUSD();
+  getUSDRate(selectHeader);
   getDailyRate();
   getAllCurrencies(select1);
   getAllCurrencies(select2);
+};
+
+// select currencies in header select and display rate selected currencies to USD
+
+selectHeader.onchange = () => {
+  headerRate.innerHTML = `1 USD = ${Number(selectHeader.value).toFixed(4)} ${
+    selectHeader.options[selectHeader.selectedIndex].text
+  }`;
 };
 
 // select currencies, count & display in list result exchange currencies
@@ -169,7 +226,8 @@ const addItemToList = (amount, currency1, currency2, result) => {
 };
 
 btnConvert.onclick = () => {
-  if (input.value < 0) {
+  const regex = /^\d+$/;
+  if (!regex.test(input.value)) {
     errorMessInput.innerHTML =
       'That is not a valid input, enter a number greater than zero';
     setTimeout(() => (errorMessInput.innerHTML = ''), 4000);
@@ -182,6 +240,25 @@ btnConvert.onclick = () => {
     input.value = '';
   }
 };
+
+// reverse currencies and rates in select fields by click
+
+reverseCurr.onclick = () => {
+  if (rateTo && rateFrom) {
+    [rateTo, rateFrom] = [rateFrom, rateTo];
+    [
+      select1.options[select1.selectedIndex].text,
+      select2.options[select2.selectedIndex].text,
+    ] = [
+      select2.options[select2.selectedIndex].text,
+      select1.options[select1.selectedIndex].text,
+    ];
+    [currencyFrom, currencyTo] = [
+      select1.options[select1.selectedIndex].text,
+      select2.options[select2.selectedIndex].text,
+    ];
+  } else return;
+}
 
 // show list with history of currency conversions with two buttons (clear & close)
 

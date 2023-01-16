@@ -38,14 +38,20 @@ body {
 }
 
 .card {
-  min-height: 70vh;
-  background-color: var(--bg-dark);
+  min-height: 60vh;
+  background-color: var(--bg-grey);
 }
 
 .select-section {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#select-header {
+  width: 100px;
+  height: 50px;
+  padding: 5px 10px;
 }
 
 select {
@@ -57,9 +63,9 @@ select {
   color: var(--text-light);
 }
 
-#icon-arrow {
-  padding: 30px;
-  color: var(--text-light);
+#reverse-currency:hover {
+  cursor: pointer;
+  opacity: .5;
 }
 
 #input, #date {
@@ -82,7 +88,7 @@ ul li {
 }
 
 .btn-delete-item {
-  background-color: var(--bg-dark);
+  background-color: var(--bg-grey);
   border: none;
 }
 
@@ -129,4 +135,32 @@ ul li {
 
 small {
   color: var(--text-light);
+}
+
+.running-line {
+  position: relative;
+  min-height: 20px;
+  overflow: hidden;
+}
+
+.running-line-wrapper-first {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(100%, 0);
+  animation: ticker 30s infinite linear forwards;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translate(100%, 0);
+  }
+
+  50% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-100%, 0);
+  }
 }
