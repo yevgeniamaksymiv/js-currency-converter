@@ -7,8 +7,8 @@ const btc = document.getElementById('BTC-rate');
 const headerRate = document.getElementById('header-rate');
 const selectHeader = document.getElementById('select-header');
 const dateInfo = document.getElementById('current-date');
-const select1 = document.getElementById('select-1');
-const select2 = document.getElementById('select-2');
+const selectFrom = document.getElementById('select-1');
+const selectTo = document.getElementById('select-2');
 const input = document.getElementById('input');
 const date = document.getElementById('date');
 const btnConvert = document.getElementById('btn-convert');
@@ -49,11 +49,11 @@ date.max = date.value;
 
 date.onchange = () => {
   if (dateCurr.split('.').reverse().join('-') !== date.value) {
-    select1.length = 1;
-    select2.length = 1;
+    selectFrom.length = 1;
+    selectTo.length = 1;
 
-    getAllCurrencies(select1, date.value);
-    getAllCurrencies(select2, date.value);
+    getAllCurrencies(selectFrom, date.value);
+    getAllCurrencies(selectTo, date.value);
   }
 };
 
@@ -72,14 +72,12 @@ const getBTCtoUSD = async () => {
       params: {
         base: 'BTC',
         symbols: 'USD',
-        source: 'crypto'
+        source: 'crypto',
       },
     });
     const rates = Object.entries(response.data.rates);
     btc.innerHTML = ` 1 BTC = ${Number(rates[0][1]).toFixed(2)} USD`;
     btc.style.color = '#0d6efd';
-    
-    
   } catch (error) {
     console.error(error);
   }
@@ -146,15 +144,14 @@ const getAllCurrencies = async (parentTag, historyDate = null) => {
     } catch (error) {
       console.error(error);
     }
-  } else {
-    try {
-      const response = await axiosInstance.get('/latest');
-      const rates = Object.entries(response.data.rates);
+  }
+  try {
+    const response = await axiosInstance.get('/latest');
+    const rates = Object.entries(response.data.rates);
 
-      appendOptionsToSelectTag(rates, parentTag);
-    } catch (error) {
-      console.error(error);
-    }
+    appendOptionsToSelectTag(rates, parentTag);
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -162,8 +159,8 @@ window.onload = () => {
   getBTCtoUSD();
   getUSDRate(selectHeader);
   getDailyRate();
-  getAllCurrencies(select1);
-  getAllCurrencies(select2);
+  getAllCurrencies(selectFrom);
+  getAllCurrencies(selectTo);
 };
 
 // select currencies in header select and display rate selected currencies to USD
@@ -182,14 +179,14 @@ let rateTo;
 let currencyFrom;
 let currencyTo;
 
-select1.onchange = () => {
-  rateFrom = select1.value;
-  currencyFrom = select1.options[select1.selectedIndex].text;
+selectFrom.onchange = () => {
+  rateFrom = selectFrom.value;
+  currencyFrom = selectFrom.options[selectFrom.selectedIndex].text;
 };
 
-select2.onchange = () => {
-  rateTo = select2.value;
-  currencyTo = select2.options[select2.selectedIndex].text;
+selectTo.onchange = () => {
+  rateTo = selectTo.value;
+  currencyTo = selectTo.options[selectTo.selectedIndex].text;
 };
 
 const createListItem = (id) => {
@@ -227,9 +224,9 @@ const addItemToList = (amount, currency1, currency2, result) => {
 
 btnConvert.onclick = () => {
   const regex = /^\d+$/;
-  if (!regex.test(input.value)) {
+  if (!regex.test(input.value) || input.value.length > 12) {
     errorMessInput.innerHTML =
-      'That is not a valid input, enter a number greater than zero';
+      'That is not a valid input, enter a number greater than zero and 12 symbols max';
     setTimeout(() => (errorMessInput.innerHTML = ''), 4000);
     return;
   }
@@ -247,18 +244,18 @@ reverseCurr.onclick = () => {
   if (rateTo && rateFrom) {
     [rateTo, rateFrom] = [rateFrom, rateTo];
     [
-      select1.options[select1.selectedIndex].text,
-      select2.options[select2.selectedIndex].text,
+      selectFrom.options[selectFrom.selectedIndex].text,
+      selectTo.options[selectTo.selectedIndex].text,
     ] = [
-      select2.options[select2.selectedIndex].text,
-      select1.options[select1.selectedIndex].text,
+      selectTo.options[selectTo.selectedIndex].text,
+      selectFrom.options[selectFrom.selectedIndex].text,
     ];
     [currencyFrom, currencyTo] = [
-      select1.options[select1.selectedIndex].text,
-      select2.options[select2.selectedIndex].text,
+      selectFrom.options[selectFrom.selectedIndex].text,
+      selectTo.options[selectTo.selectedIndex].text,
     ];
   } else return;
-}
+};
 
 // show list with history of currency conversions with two buttons (clear & close)
 
