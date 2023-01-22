@@ -144,14 +144,15 @@ const getAllCurrencies = async (parentTag, historyDate = null) => {
     } catch (error) {
       console.error(error);
     }
-  }
-  try {
-    const response = await axiosInstance.get('/latest');
-    const rates = Object.entries(response.data.rates);
+  } else {
+    try {
+      const response = await axiosInstance.get('/latest');
+      const rates = Object.entries(response.data.rates);
 
-    appendOptionsToSelectTag(rates, parentTag);
-  } catch (error) {
-    console.error(error);
+      appendOptionsToSelectTag(rates, parentTag);
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 
